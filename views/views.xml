@@ -1,0 +1,24 @@
+<odoo>
+  <data>
+    <!-- model.name inherit form view -->
+    <record id="method_supermercado_social.view_partner_form" model="ir.ui.view">
+      <field name="name">method.supermercado.social.view.partner.form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//page[@name='sales_purchases']" position="after">
+          <page name="beneficiario" string="Datos Beneficiario">
+              <group>
+                <group name="beneficiario_grupo" string="Beneficiario">
+                  <field name="grupo_familiar"/>   
+                  <field name="hora_retiro" widget="float_time"/>   
+                  <field name="dia_retiro" widget="radio"/>   
+                  <field name="saldo_menbresia" widget="widget=’monetary"/>   
+                </group>
+              </group>
+          </page>
+        </xpath>        
+      </field>
+    </record>
+  </data>
+</odoo>
