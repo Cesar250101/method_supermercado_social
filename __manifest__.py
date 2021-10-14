@@ -31,6 +31,7 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
+        'security/ir.model.access.csv'
     ],
     # only loaded in demonstration mode
     'demo': [
