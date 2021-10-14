@@ -32,7 +32,7 @@ class Clientes(models.Model):
     
 
 
-class ModuleName(models.Model):
+class Registro(models.Model):
     _name = 'method_supermercado_social.asistencia'
     _description = 'Registro de beneficiarios'
 
@@ -55,8 +55,17 @@ class ModuleName(models.Model):
             self.dia_retiro=partner.dia_retiro
             self.saldo_menbresia=partner.saldo_menbresia
             self.codigo_qr=partner.codigo_qr
+
         else:
+            self.partner_id=""
+            self.grupo_familiar=""
+            self.hora_retiro=""
+            self.dia_retiro=""
+            self.saldo_menbresia=""
+            self.codigo_qr=""
+
             raise exceptions.UserError('Código QR no asociado al cliente, seleccione al beneficiario de forma manual y grabe el registro')
+
             
     
 
