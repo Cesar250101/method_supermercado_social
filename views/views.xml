@@ -29,11 +29,11 @@
       <field name="arch" type="xml">
         <tree>
                 <field name="create_date" />
-                <field name="partner_id" readonly="1"/>
-                <field name="grupo_familiar" readonly="1"/>
-                <field name="hora_retiro" readonly="1"/>
-                <field name="dia_retiro" readonly="1"/>
-                <field name="saldo_menbresia" readonly="1"/>
+                <field name="partner_id"/>
+                <field name="grupo_familiar"/>
+                <field name="hora_retiro"/>
+                <field name="dia_retiro"/>
+                <field name="saldo_menbresia"/>
 
           
         </tree>
