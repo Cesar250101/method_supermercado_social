@@ -53,7 +53,7 @@ class Registro(models.Model):
         if self.buscar_rut==False:
             partner=self.env['res.partner'].search([('codigo_qr','=',self.codigo_qr)],limit=1)
         else:
-            rut=self.vat.replace('-','')
+            rut=self.rut.replace('-','')
             rut=rut.replace('.','')
             partner=self.env['res.partner'].search([('vat','=',rut)],limit=1)
         if partner:
