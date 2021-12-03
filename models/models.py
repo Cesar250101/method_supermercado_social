@@ -10,7 +10,7 @@ class ModuleName(models.Model):
 
     @api.model
     def valida_entrega(self):
-        pendientes=self.search([('state','=','assigned'),('picking_type_id','=',2)])
+        pendientes=self.search([('state','=','assigned')])
         for p in pendientes:
             for m in p.move_ids_without_package:
                 m.quantiyt_done = m.product_uom_qty
