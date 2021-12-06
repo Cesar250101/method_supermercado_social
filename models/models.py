@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from re import search
 from odoo import models, fields, api
 from odoo import exceptions 
 
@@ -10,10 +11,11 @@ class ModuleName(models.Model):
 
     @api.model
     def valida_entrega(self):
-        pendientes=self.search([('state','=','assigned')])
+        pendientes=self.search([('state','=','assigned'),('picking_type_id','=',2)])
         for p in pendientes:
-            for m in p.move_ids_without_package:
-                m.quantiyt_done = m.product_uom_qty
+            move_line=self.env['stock.move.line'].search([('picking_id','=',p.id)])
+            for m in move_line:
+                m.qty_done = m.product_uom_qty
             p.button_validate()
 
 
