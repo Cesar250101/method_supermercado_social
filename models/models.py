@@ -42,7 +42,7 @@ class Clientes(models.Model):
     saldo_menbresia = fields.Integer(compute='_compute_saldo_menbresia', string='Saldo Pendiente')
     facturas_ids = fields.One2many(comodel_name='account.invoice', inverse_name='partner_id', string='Menbresias Beneficiarios')
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id', string='Retiros')
-    ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
+    #ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
     
 
     @api.depends('asistencia_ids')
