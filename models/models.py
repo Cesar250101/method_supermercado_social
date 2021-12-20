@@ -107,7 +107,6 @@ class Registro(models.Model):
         elif self.buscar_rut==True and self.rut:
             rut=self.rut.replace('-','')
             rut=rut.replace('.','')
-            rut='CL'+rut
             partner=self.env['res.partner'].search([('vat','=',rut)],limit=1)
         if partner:
             self.partner_id=partner.id
