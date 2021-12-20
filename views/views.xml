@@ -16,7 +16,7 @@
                   <field name="saldo_menbresia" widget="widget=’monetary"/>   
                   <field name="codigo_qr"/>   
                   <field name="asistencia_ids"/>   
-                  <!-- <field name="ultimo_retiro"/>    -->
+                  <field name="ultimo_retiro"/>   
                 </group>
               </group>
           </page>
@@ -36,7 +36,7 @@
                 <field name="hora_retiro"/>
                 <field name="dia_retiro"/>
                 <field name="saldo_menbresia"/>
-                <!-- <field name="ultimo_retiro"/>           -->
+                <field name="ultimo_retiro"/>          
         </tree>
       </field>
     </record>
@@ -58,8 +58,8 @@
                 <field name="hora_retiro"/>
                 <field name="dia_retiro"/>
                 <field name="saldo_menbresia"/>
-                <!-- <field name="ultimo_retiro"/>
-                <field name="nro_semana"/> -->
+                <field name="ultimo_retiro"/>
+                <field name="nro_semana"/>
               </group>  
             </group>
           </sheet>

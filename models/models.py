@@ -4,8 +4,8 @@ from re import search
 from odoo import models, fields, api
 from odoo import exceptions 
 import datetime
-import time 
-from time import gmtime, strftime
+#import time 
+#from time import gmtime, strftime
 from datetime import datetime
 from odoo.exceptions import ValidationError
 
@@ -42,14 +42,15 @@ class Clientes(models.Model):
     saldo_menbresia = fields.Integer(compute='_compute_saldo_menbresia', string='Saldo Pendiente')
     facturas_ids = fields.One2many(comodel_name='account.invoice', inverse_name='partner_id', string='Menbresias Beneficiarios')
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id', string='Retiros')
-    #ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
+    ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
     
 
     @api.depends('asistencia_ids')
     def _compute_ultimo_retiro(self):
-        partner_id=self.id
-        retiro_last = self.env['method_supermercado_social.asistencia'].search([('partner_id','=',partner_id)])[-1].create_date
-        self.ultimo_retiro=retiro_last
+        for i in self:
+            partner_id=i.id
+            retiro_last = self.env['method_supermercado_social.asistencia'].search([('partner_id','=',partner_id)])[-1].create_date
+            i.ultimo_retiro=retiro_last
             
     
     @api.one
@@ -76,7 +77,7 @@ class Registro(models.Model):
     saldo_menbresia = fields.Integer(string='Saldo Pendiente')
     buscar_rut = fields.Boolean(string='Buscar por RUT')
     rut = fields.Char(string='Rut Beneficiario')
-    #ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
+    ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
     nro_semana = fields.Integer(string='N° Semana')
     
     @api.constrains('nro_semana')
@@ -95,9 +96,10 @@ class Registro(models.Model):
 
     @api.onchange('codigo_qr','rut')
     def _onchange_codigo_qr(self):
-        if self.buscar_rut==False:
+        partner=False
+        if self.buscar_rut==False and self.codigo_qr:
             partner=self.env['res.partner'].search([('codigo_qr','=',self.codigo_qr)],limit=1)
-        else:
+        elif self.buscar_rut==True and self.rut:
             rut=self.rut.replace('-','')
             rut=rut.replace('.','')
             rut='CL'+rut
@@ -109,17 +111,17 @@ class Registro(models.Model):
             self.dia_retiro=partner.dia_retiro
             self.saldo_menbresia=partner.saldo_menbresia
             self.codigo_qr=partner.codigo_qr
-            # self.ultimo_retiro=partner.ultimo_retiro
-            # fecha_actual=datetime.today()
-            # fecha_creacion=datetime.date(fecha_actual).isocalendar()[1]            
-            # nrosemana_actual=fecha_creacion
-            # nrosemana_ultima=datetime.date(self.partner_id.ultimo_retiro).isocalendar()[1]            
-            # self.nro_semana=nrosemana_actual-nrosemana_ultima
-            if self.codigo_qr:
-                vals={
-                     'codigo_qr':self.codigo_qr
-                 }
-                partner.sudo().write(vals)
+            self.ultimo_retiro=partner.ultimo_retiro
+            fecha_actual=datetime.today()
+            fecha_creacion=datetime.date(fecha_actual).isocalendar()[1]            
+            nrosemana_actual=fecha_creacion
+            nrosemana_ultima=datetime.date(self.partner_id.ultimo_retiro).isocalendar()[1]            
+            self.nro_semana=nrosemana_actual-nrosemana_ultima
+            # if self.codigo_qr:
+            #     vals={
+            #          'codigo_qr':self.codigo_qr
+            #      }
+            #     partner.sudo().write(vals)
 
             
 
@@ -131,12 +133,6 @@ class Registro(models.Model):
             self.saldo_menbresia=""
             self.codigo_qr=""
             self.ultimo_retiro=""
-            nrosemana=""
+            self.nro_semana=""
 
             raise exceptions.UserError('Código QR o RUT no asociado al cliente, seleccione al beneficiario de forma manual y grabe el registro')
-
-                
-
-    
-    
-
