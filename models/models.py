@@ -76,7 +76,7 @@ class Registro(models.Model):
     saldo_menbresia = fields.Integer(string='Saldo Pendiente')
     buscar_rut = fields.Boolean(string='Buscar por RUT')
     rut = fields.Char(string='Rut Beneficiario')
-    ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
+    #ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
     nro_semana = fields.Integer(string='N° Semana')
     
     @api.constrains('nro_semana')
