@@ -49,7 +49,10 @@ class Clientes(models.Model):
     def _compute_ultimo_retiro(self):
         for i in self:
             partner_id=i.id
-            retiro_last = self.env['method_supermercado_social.asistencia'].search([('partner_id','=',partner_id)])[-1].create_date
+            try: 
+                retiro_last = self.env['method_supermercado_social.asistencia'].search([('partner_id','=',partner_id)])[-1].create_date
+            except: 
+                retiro_last=""
             i.ultimo_retiro=retiro_last
             
     
