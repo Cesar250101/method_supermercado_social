@@ -15,6 +15,8 @@
                   <field name="dia_retiro" widget="radio"/>   
                   <field name="saldo_menbresia" widget="widget=’monetary"/>   
                   <field name="codigo_qr"/>   
+                  <field name="asistencia_ids"/>   
+                  <field name="ultimo_retiro"/>   
                 </group>
               </group>
           </page>
@@ -34,8 +36,7 @@
                 <field name="hora_retiro"/>
                 <field name="dia_retiro"/>
                 <field name="saldo_menbresia"/>
-
-          
+                <field name="ultimo_retiro"/>          
         </tree>
       </field>
     </record>
@@ -52,11 +53,13 @@
                 <field name="buscar_rut"  widget='checkbox'/>   
                 <field name="codigo_qr" attrs="{'invisible':[('buscar_rut', '=', True)]}"/>
                 <field name="rut" attrs="{'invisible':[('buscar_rut', '=', False)]}"/>
-                <field name="partner_id"/>
+                <field name="partner_id" required="1" default=""/>
                 <field name="grupo_familiar"/>
                 <field name="hora_retiro"/>
                 <field name="dia_retiro"/>
                 <field name="saldo_menbresia"/>
+                <field name="ultimo_retiro"/>
+                <field name="nro_semana"/>
               </group>  
             </group>
           </sheet>
