@@ -109,12 +109,12 @@ class Registro(models.Model):
             self.dia_retiro=partner.dia_retiro
             self.saldo_menbresia=partner.saldo_menbresia
             self.codigo_qr=partner.codigo_qr
-            self.ultimo_retiro=partner.ultimo_retiro
-            fecha_actual=datetime.today()
-            fecha_creacion=datetime.date(fecha_actual).isocalendar()[1]            
-            nrosemana_actual=fecha_creacion
-            nrosemana_ultima=datetime.date(self.partner_id.ultimo_retiro).isocalendar()[1]            
-            self.nro_semana=nrosemana_actual-nrosemana_ultima
+            # self.ultimo_retiro=partner.ultimo_retiro
+            # fecha_actual=datetime.today()
+            # fecha_creacion=datetime.date(fecha_actual).isocalendar()[1]            
+            # nrosemana_actual=fecha_creacion
+            # nrosemana_ultima=datetime.date(self.partner_id.ultimo_retiro).isocalendar()[1]            
+            # self.nro_semana=nrosemana_actual-nrosemana_ultima
             if self.codigo_qr:
                 vals={
                      'codigo_qr':self.codigo_qr
