@@ -83,11 +83,11 @@ class Registro(models.Model):
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
     nro_semana = fields.Integer(string='N° Semana',default=-1)
     
-    @api.constrains('nro_semana')
-    def _check_nro_semana(self):
-        if self.partner_id:
-            if self.nro_semana>=0:
-                raise ValidationError("Beneficiario ya hizo un retiro esta semana!")
+    # @api.constrains('nro_semana')
+    # def _check_nro_semana(self):
+    #     if self.partner_id:
+    #         if self.nro_semana>=0:
+    #             raise ValidationError("Beneficiario ya hizo un retiro esta semana!")
 
 
     @api.depends('create_date')
