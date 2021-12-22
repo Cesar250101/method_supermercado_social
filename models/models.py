@@ -85,7 +85,7 @@ class Registro(models.Model):
     
     @api.constrains('nro_semana')
     def _check_nro_semana(self):
-        if self.partner_id:
+        if self.partner_id and self.ultimo_retiro:
             if self.nro_semana<=0:
                 raise ValidationError("Beneficiario ya hizo un retiro esta semana!")
 
@@ -117,7 +117,7 @@ class Registro(models.Model):
             fecha_actual=datetime.today()            
             nrosemana_actual=datetime.date(fecha_actual).isocalendar()[1]            
             if self.ultimo_retiro==False:
-                self.nro_semana=-1
+                self.nro_semana=1
                 nrosemana_ultima=0
             else:    
                 nrosemana_ultima=datetime.date(self.partner_id.ultimo_retiro).isocalendar()[1]                            
