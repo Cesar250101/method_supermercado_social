@@ -83,14 +83,14 @@ class Registro(models.Model):
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
     nro_semana = fields.Integer(string='N° Semana',default=-1)
     
-    # @api.constrains('nro_semana')
-    # def _check_nro_semana(self):
-    #     if self.partner_id:
-    #         if self.nro_semana>=0:
-    #             raise ValidationError("Beneficiario ya hizo un retiro esta semana!")
+    @api.constrains('nro_semana')
+    def _check_nro_semana(self):
+        if self.partner_id:
+            if self.nro_semana<=0:
+                raise ValidationError("Beneficiario ya hizo un retiro esta semana!")
 
 
-    @api.depends('create_date')
+    @api.depends('ultimo_retiro')
     def _compute_nro_semana(self):
         nrosemana=datetime.date(self.create_date).strftime("%V")
         print(nrosemana)
@@ -114,9 +114,8 @@ class Registro(models.Model):
             self.saldo_menbresia=partner.saldo_menbresia
             self.codigo_qr=partner.codigo_qr
             self.ultimo_retiro=partner.ultimo_retiro
-            fecha_actual=datetime.today()
-            fecha_creacion=datetime.date(fecha_actual).isocalendar()[1]            
-            nrosemana_actual=fecha_creacion
+            fecha_actual=datetime.today()            
+            nrosemana_actual=datetime.date(fecha_actual).isocalendar()[1]            
             if self.ultimo_retiro==False:
                 self.nro_semana=-1
                 nrosemana_ultima=0
