@@ -43,6 +43,7 @@ class Clientes(models.Model):
     facturas_ids = fields.One2many(comodel_name='account.invoice', inverse_name='partner_id', string='Menbresias Beneficiarios')
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id', string='Retiros')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
+
     
 
     @api.depends('asistencia_ids')
@@ -81,12 +82,12 @@ class Registro(models.Model):
     buscar_rut = fields.Boolean(string='Buscar por RUT')
     rut = fields.Char(string='Rut Beneficiario')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
-    nro_semana = fields.Integer(string='N° Semana',default=-1)
+    dif_nro_semana = fields.Integer(string='N° Semana')
     
-    @api.constrains('nro_semana')
+    @api.constrains('dif_nro_semana')
     def _check_nro_semana(self):
         if self.partner_id and self.ultimo_retiro:
-            if self.nro_semana<=0:
+            if self.dif_nro_semana==0:
                 raise ValidationError("Beneficiario ya hizo un retiro esta semana!")
 
 
@@ -117,11 +118,12 @@ class Registro(models.Model):
             fecha_actual=datetime.today()            
             nrosemana_actual=datetime.date(fecha_actual).isocalendar()[1]            
             if self.ultimo_retiro==False:
-                self.nro_semana=1
                 nrosemana_ultima=0
             else:    
                 nrosemana_ultima=datetime.date(self.partner_id.ultimo_retiro).isocalendar()[1]                            
-                self.nro_semana=nrosemana_actual-nrosemana_ultima
+            dif_nro_semana=nrosemana_actual-nrosemana_ultima
+            #print(dif_nro_semana)
+            self.dif_nro_semana=nrosemana_actual-nrosemana_ultima
             # if self.codigo_qr:
             #     vals={
             #          'codigo_qr':self.codigo_qr
@@ -138,6 +140,6 @@ class Registro(models.Model):
             self.saldo_menbresia=""
             self.codigo_qr=""
             self.ultimo_retiro=""
-            self.nro_semana=""
+            self.dif_nro_semana=""
             if self.codigo_qr or self.rut:
                 raise exceptions.UserError('Código QR o RUT no asociado al cliente, seleccione al beneficiario de forma manual y grabe el registro')

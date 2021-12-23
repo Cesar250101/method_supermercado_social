@@ -59,7 +59,7 @@
                 <field name="dia_retiro"/>
                 <field name="saldo_menbresia"/>
                 <field name="ultimo_retiro"/>
-                <field name="nro_semana" invisible="1"/>
+                <field name="dif_nro_semana"/>
               </group>  
             </group>
           </sheet>
