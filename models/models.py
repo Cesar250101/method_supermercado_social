@@ -38,6 +38,20 @@ class ModuleName(models.Model):
             move=self.env['stock.move'].search([('picking_id','=',p.id)])
             for m in move:
                 move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])
+                if not move_line:
+                    vals={
+                        'picking_id':p.id,
+                        'move_id':m.id,
+                        'product_id':m.product_id.id,
+                        'product_uom_id':m.product_uom.id,
+                        #'product_uom_qty':m.product_uom_qty,
+                        #'product_qty':m.product_uom_qty,
+                        'qty_done':m.product_uom_qty,
+                        'location_id':m.location_id.id,
+                        'location_dest_id':m.location_dest_id.id
+                    }
+                    move_line.sudo().create(vals)
+                    move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])
                 for ml in move_line:
                     if not ml.lot_id:
                         lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id),('product_qty','>',0)],limit=1,order="life_date")
