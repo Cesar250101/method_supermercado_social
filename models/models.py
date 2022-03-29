@@ -40,7 +40,7 @@ class ModuleName(models.Model):
                 move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])
                 for ml in move_line:
                     if not ml.lot_id:
-                        lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id),('product_qty','>',0)],limit=1,order="life_date desc"))
+                        lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id),('product_qty','>',0)],limit=1,order="life_date desc")
                         values={
                             'lot_id':lote.id,
                             'qty_done':m.product_uom_qty
