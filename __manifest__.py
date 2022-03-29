@@ -31,8 +31,13 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'static/src/xml/templates.xml',
     ],
+    'qweb': [
+        'static/src/xml/partner.xml',
+    ],
+
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',

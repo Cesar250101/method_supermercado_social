@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2016-Today: La Louve (<http://www.lalouve.net/>)
+    @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<templates id="method_supermercado_social.template_client" inherit_id="point_of_sale.template"
+	name="method.supermercado_social.template.client">
+	<t t-extend="ClientListScreenWidget">
+		<t t-jquery="table.client-list thead tr th:first-child" t-operation="before">
+			<th style="width: 120px;">Último Retiro</th>
+		</t>
+	</t>
+	<t t-extend="ClientLine">
+		<t t-jquery="tr td:first-child" t-operation="before">
+			<td>
+				<t t-if="partner.ultimo_retiro">
+					<t t-esc='partner.ultimo_retiro' />
+				</t>
+			</td>
+		</t>
+	</t>
+
+</templates>
+

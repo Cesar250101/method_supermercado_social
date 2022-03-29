@@ -10,6 +10,24 @@ from datetime import datetime
 from odoo.exceptions import ValidationError
 
 
+
+class OdenesPos(models.Model):
+    _inherit = 'pos.order'
+
+    @api.constrains('partner_id')
+    def _check_partner_id(self):
+        fecha_actual=datetime.today()
+        fecha_desde=fecha_actual.strftime("%d/%m/%Y")
+        fecha_hasta=fecha_desde+" 23:59:59"
+        domain=[
+            ('partner_id','=',self.partner_id.id),
+            ('date_order','>=',fecha_desde),
+            ('date_order','<=',fecha_hasta),
+            ('id','!=',self.id),
+        ]
+    
+
+
 class ModuleName(models.Model):
     _inherit = 'stock.picking'
 
@@ -17,12 +35,22 @@ class ModuleName(models.Model):
     def valida_entrega(self):
         pendientes=self.search([('state','=','assigned'),('picking_type_id','=',2)])
         for p in pendientes:
-            move_line=self.env['stock.move.line'].search([('picking_id','=',p.id)])
-            for m in move_line:
-                values={
-                    'qty_done':m.product_uom_qty
-                }
-                m.write(values)
+            move=self.env['stock.move'].search([('picking_id','=',p.id)])
+            for m in move:
+                move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])
+                for ml in move_line:
+                    if not ml.lot_id:
+                        lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id),('product_qty','>',0)],limit=1,order="life_date desc"))
+                        values={
+                            'lot_id':lote.id,
+                            'qty_done':m.product_uom_qty
+                        }
+                    else:
+                        values={
+                            'qty_done':m.product_uom_qty
+                        }
+
+                    ml.write(values)
             p.button_validate()
 
 
@@ -84,11 +112,6 @@ class Registro(models.Model):
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
     dif_nro_semana = fields.Integer(string='N° Semana')
     
-    @api.constrains('dif_nro_semana')
-    def _check_nro_semana(self):
-        if self.partner_id and self.ultimo_retiro:
-            if self.dif_nro_semana==0:
-                raise ValidationError("Beneficiario ya hizo un retiro esta semana!")
 
 
     @api.depends('ultimo_retiro')
