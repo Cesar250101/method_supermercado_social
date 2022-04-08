@@ -8,7 +8,7 @@ import datetime
 #from time import gmtime, strftime
 from datetime import datetime
 from odoo.exceptions import ValidationError
-
+from odoo.exceptions import ValidationError
 
 
 class OdenesPos(models.Model):
@@ -125,8 +125,16 @@ class Registro(models.Model):
     rut = fields.Char(string='Rut Beneficiario')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
     dif_nro_semana = fields.Integer(string='N° Semana')
-    
 
+
+    @api.onchange('partner_id')
+    def _check_create_date(self):
+        fecha_ultimo=self.search([('partner_id','=',self.partner_id.id)],order='create_date desc',limit=1).create_date
+        if fecha_ultimo:
+            ultimo_retiro=fecha_ultimo.strftime("%d/%m/%Y")
+            fecha_actual=datetime.now().strftime("%d/%m/%Y")
+            if ultimo_retiro>=fecha_actual:
+                raise ValidationError("Beneficiario ya esta registrado como asisten el día de hoy!")    
 
     @api.depends('ultimo_retiro')
     def _compute_nro_semana(self):
