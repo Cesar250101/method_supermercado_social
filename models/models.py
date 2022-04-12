@@ -130,10 +130,12 @@ class Registro(models.Model):
     @api.onchange('partner_id')
     def _check_create_date(self):
         fecha_ultimo=self.search([('partner_id','=',self.partner_id.id)],order='create_date desc',limit=1).create_date
+        fecha_ultimo_date=self.search([('partner_id','=',self.partner_id.id)],order='create_date desc',limit=1).create_date
         if fecha_ultimo:
             ultimo_retiro=fecha_ultimo.strftime("%d/%m/%Y")
             fecha_actual=datetime.now().strftime("%d/%m/%Y")
-            if ultimo_retiro>=fecha_actual:
+            fecha_actual_date=datetime.now()
+            if fecha_ultimo_date>=fecha_actual_date:
                 raise ValidationError("Beneficiario ya esta registrado como asisten el día de hoy!")    
 
     @api.depends('ultimo_retiro')
@@ -188,3 +190,9 @@ class Registro(models.Model):
             self.dif_nro_semana=""
             if self.codigo_qr or self.rut:
                 raise exceptions.UserError('Código QR o RUT no asociado al cliente, seleccione al beneficiario de forma manual y grabe el registro')
+
+class Desecho(models.Model):
+    _inherit = 'stock.scrap'
+
+    motivo_desecho = fields.Text('Observación ')
+    
