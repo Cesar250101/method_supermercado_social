@@ -11,6 +11,17 @@ from odoo.exceptions import ValidationError
 from odoo.exceptions import ValidationError
 
 
+class ModuleName(models.Model):
+    _inherit = 'stock.scrap'
+
+    motivo_merma = fields.Selection(string='Motivo Merma', selection=[('diferencia', 'Diferencia de inventario'), 
+                                                                    ('vencido', 'Producto venció en bodega'),
+                                                                    ('daño', 'Producto dañado'),
+                                                                    ('ingreso', 'Error de ingreso'),
+                                                                    ('sala', 'Merma en sala')],
+                                                            required=True)
+    
+
 class OdenesPos(models.Model):
     _inherit = 'pos.order'
 
