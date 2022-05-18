@@ -63,13 +63,20 @@ class ModuleName(models.Model):
                     }
                     move_line.sudo().create(vals)
                     move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])
+                    
                 for ml in move_line:
+                    stock_lot=0
                     if not ml.lot_id:
-                        lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id),('product_qty','>',0)],limit=1,order="life_date")
-                        values={
-                            'lot_id':lote.id,
-                            'qty_done':m.product_uom_qty
-                        }
+                        lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id),('product_qty','>',0)],order="life_date")
+                        for l in lote:
+                            if l.product_qty>0:
+                                stock_lot=l.product_qty
+                                values={
+                                    'lot_id':l.id,
+                                    'qty_done':m.product_uom_qty
+                                }
+                            if stock_lot>0:
+                                break
                     else:
                         values={
                             'qty_done':m.product_uom_qty
