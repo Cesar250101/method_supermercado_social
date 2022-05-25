@@ -67,7 +67,7 @@ class ModuleName(models.Model):
                 for ml in move_line:
                     stock_lot=0
                     if not ml.lot_id:
-                        lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id),('product_qty','>',0)],order="life_date")
+                        lote=self.env['stock.production.lot'].search([('product_id','=',ml.product_id.id)],order="life_date")
                         for l in lote:
                             if l.product_qty>0:
                                 stock_lot=l.product_qty
