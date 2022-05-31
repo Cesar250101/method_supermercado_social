@@ -74,7 +74,7 @@ class ModuleName(models.Model):
 
     @api.model
     def valida_entrega(self):
-        pendientes=self.search([("state","in",['assigned','confirmed']),('picking_type_id','=',2)],limit=100)
+        pendientes=self.search([("state","in",['assigned','confirmed']),('picking_type_id','=',2)],limit=40)
         for p in pendientes:
             move=self.env['stock.move'].search([('picking_id','=',p.id)])
             for m in move:                
