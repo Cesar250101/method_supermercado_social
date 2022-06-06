@@ -104,6 +104,11 @@ class ModuleName(models.Model):
                         }
                     move_line.sudo().create(vals)
                     move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])                    
+                else:
+                    vals={
+                        'qty_done':m.product_uom_qty
+                    }
+                    move_line.sudo().write(vals)
             p.button_validate()
 
 
