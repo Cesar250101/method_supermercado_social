@@ -74,7 +74,7 @@ class ModuleName(models.Model):
 
     @api.model
     def valida_entrega(self):
-        pendientes=self.search([("state","in",['assigned','confirmed']),('picking_type_id','=',2)],limit=40)
+        pendientes=self.search([("state","in",['assigned','confirmed'])],limit=100)
         for p in pendientes:
             move=self.env['stock.move'].search([('picking_id','=',p.id)])
             for m in move:                
@@ -83,6 +83,11 @@ class ModuleName(models.Model):
                         }
                 m.sudo().write(values)
                 move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])
+                domain = [
+                                ("product_id", "=", m.product_id.id),
+                                ("quantity", ">", 0),
+                                ('location_id','=',p.location_id.id)
+                            ]                
                 if not move_line:
                     domain = [
                                 ("product_id", "=", m.product_id.id),
@@ -105,8 +110,10 @@ class ModuleName(models.Model):
                     move_line.sudo().create(vals)
                     move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])                    
                 else:
+                    lote=self.env['stock.quant'].search(domain,order="in_date",limit=1)                       
                     vals={
-                        'qty_done':m.product_uom_qty
+                        'qty_done':m.product_uom_qty,
+                        'lot_id':lote.lot_id.id
                     }
                     move_line.sudo().write(vals)
             p.button_validate()
