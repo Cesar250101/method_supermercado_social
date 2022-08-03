@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
+from ast import Continue
+from distutils.log import info
 from re import search
 from odoo import models, fields, api
 from odoo import exceptions 
 import datetime
+from datetime import date
 #import time 
 #from time import gmtime, strftime
 from datetime import datetime
-from odoo.exceptions import ValidationError
-from odoo.exceptions import ValidationError
-
+from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
 
 class ModuleName(models.Model):
     _inherit = 'stock.scrap'
@@ -118,6 +119,7 @@ class ModuleName(models.Model):
                     move_line.sudo().write(vals)
             p.button_validate()
 
+    
 
 class Clientes(models.Model):
     _inherit = 'res.partner'
@@ -137,7 +139,14 @@ class Clientes(models.Model):
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id', string='Retiros')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
 
-    
+    @api.one
+    @api.depends('facturas_ids','facturas_ids.state')
+    def _compute_saldo_menbresia(self):    
+        facturas=self.env['account.invoice'].search([('partner_id','=',self.id),('state','=','open')])
+        saldo=0
+        for f in facturas:
+            saldo+=f.amount_total
+        self.saldo_menbresia=saldo    
 
     @api.depends('asistencia_ids')
     def _compute_ultimo_retiro(self):
@@ -148,16 +157,7 @@ class Clientes(models.Model):
             except: 
                 retiro_last=False
             i.ultimo_retiro=retiro_last
-            
-    
-    @api.one
-    @api.depends('facturas_ids')
-    def _compute_saldo_menbresia(self):    
-        facturas=self.env['account.invoice'].search([('partner_id','=',self.id),('state','=','open')])
-        saldo=0
-        for f in facturas:
-            saldo+=f.amount_total
-        self.saldo_menbresia=saldo
+        
     
 
 
@@ -225,9 +225,24 @@ class Registro(models.Model):
             #          'codigo_qr':self.codigo_qr
             #      }
             #     partner.sudo().write(vals)
+            fecha_actual=date.today()
+            domain=[('state','=','open'),
+                    ('date_due','<=',fecha_actual),
+                    ('partner_id','=',partner.id)
+                    ]
+            saldo_vencido=self.env['account.invoice'].search(domain)
+            saldo=0
+            if saldo_vencido:
+                for s in saldo_vencido:
+                    saldo+=s.amount_total
+                msg = "El beneficiario {} tiene cuotas vencidas por un monto de {}".format(partner.name,saldo)
+                return {'warning': {'title':"Deuda vencida", 'message':msg}}
+            
+                
+
+
 
             
-
         else:
             self.partner_id=""
             self.grupo_familiar=""
