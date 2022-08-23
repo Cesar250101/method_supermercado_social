@@ -138,6 +138,7 @@ class Clientes(models.Model):
     facturas_ids = fields.One2many(comodel_name='account.invoice', inverse_name='partner_id', string='Menbresias Beneficiarios')
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id', string='Retiros')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
+    motivo_desactivacion = fields.Char('Motivo Desactivación')
 
     @api.one
     @api.depends('facturas_ids','facturas_ids.state')
@@ -175,6 +176,7 @@ class Registro(models.Model):
     buscar_rut = fields.Boolean(string='Buscar por RUT')
     rut = fields.Char(string='Rut Beneficiario')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
+    motivo_desactivacion = fields.Char('Motivo Desactivación',related='partner_id.motivo_desactivacion')
     dif_nro_semana = fields.Integer(string='N° Semana')
 
 
@@ -227,15 +229,22 @@ class Registro(models.Model):
             #     partner.sudo().write(vals)
             fecha_actual=date.today()
             domain=[('state','=','open'),
-                    ('date_due','<=',fecha_actual),
+                    #('date_due','<=',fecha_actual),
                     ('partner_id','=',partner.id)
                     ]
             saldo_vencido=self.env['account.invoice'].search(domain)
             saldo=0
+            saldo_por_vencer=0
             if saldo_vencido:
                 for s in saldo_vencido:
-                    saldo+=s.amount_total
-                msg = "El beneficiario {} tiene cuotas vencidas por un monto de {}".format(partner.name,saldo)
+                    if s.date_due<=date.today():
+                        saldo+=s.amount_total
+                    else:
+                        saldo_por_vencer+=s.amount_total
+                if saldo!=0:
+                    msg = "El beneficiario {} tiene Membresía Vencida por un monto de {}".format(partner.name,saldo)
+                if saldo_por_vencer!=0:
+                    msg += " El beneficiario {} tiene Membresía pendientes por un monto de {}".format(partner.name,saldo_por_vencer)
                 return {'warning': {'title':"Deuda vencida", 'message':msg}}
             
                 
