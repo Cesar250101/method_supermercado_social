@@ -242,9 +242,9 @@ class Registro(models.Model):
                     else:
                         saldo_por_vencer+=s.amount_total
                 if saldo!=0:
-                    msg = "El beneficiario {} tiene Membresía Vencida por un monto de {}".format(partner.name,saldo)
+                    msg = "El beneficiario {} tiene Membresía Vencida!".format(partner.name)
                 if saldo_por_vencer!=0:
-                    msg += " El beneficiario {} tiene Membresía pendientes por un monto de {}".format(partner.name,saldo_por_vencer)
+                    msg += " El beneficiario {} tiene Membresía pendientes!".format(partner.name)
                 return {'warning': {'title':"Deuda vencida", 'message':msg}}
             
                 
