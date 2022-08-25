@@ -9,6 +9,7 @@
 	<t t-extend="ClientListScreenWidget">
 		<t t-jquery="table.client-list thead tr th:first-child" t-operation="before">
 			<th style="width: 120px;">Último Retiro</th>
+			<th style="width: 120px;">Membresias Pendientes</th>
 		</t>
 	</t>
 	<t t-extend="ClientLine">
@@ -18,6 +19,13 @@
 					<t t-esc='partner.ultimo_retiro' />
 				</t>
 			</td>
+			<td>
+				<t t-if="partner.saldo_menbresia">
+					<t t-esc='partner.saldo_menbresia' />
+				</t>
+
+			</td>
+
 		</t>
 	</t>
 
