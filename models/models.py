@@ -12,6 +12,33 @@ from datetime import date
 from datetime import datetime
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
 
+class Pagos(models.Model):
+    _inherit = 'account.payment'
+    _description = 'Pagos de Facturas'
+
+    @api.model
+    def calzar_pagos(self):
+        pagos_sin_calzar=self.env['account.payment'].search([('invoice_ids','=',False)],limit=3)
+        for p in pagos_sin_calzar:
+            domain=[('state','=','open'),('partner_id','=',p.partner_id.id)]
+            facturas_abiertas=self.env['account.invoice'].search(domain,order="date_due",limit=3)
+            if facturas_abiertas:
+                for f in facturas_abiertas:
+                    p.invoice_ids = [(4, f.id)]
+                    f.payment_ids=[(4, p.id)] 
+                    f.write({'state':'paid'})
+                    # arma la sentencia SQL
+                    qry = """UPDATE account_invoice SET state = 'paid',
+                                reconciled=true,
+                                residual=0 ,
+                                residual_signed=0 ,
+                                residual_company_signed=0 
+                                WHERE id ={}"""
+
+                    qry=qry.format(f.id)
+                    f.env.cr.execute(qry)                            
+
+
 class ModuleName(models.Model):
     _inherit = 'stock.scrap'
 
@@ -73,53 +100,6 @@ class ModuleName(models.Model):
         self.button_validate()
 
 
-    # @api.model
-    # def valida_entrega(self):
-    #     pendientes=self.search([("state","in",['assigned','confirmed'])],limit=100)
-    #     for p in pendientes:
-    #         move=self.env['stock.move'].search([('picking_id','=',p.id)])
-    #         for m in move:                
-    #             values={
-    #                         'reserved_availability':m.product_uom_qty
-    #                     }
-    #             m.sudo().write(values)
-    #             move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])
-    #             domain = [
-    #                             ("product_id", "=", m.product_id.id),
-    #                             ("quantity", ">", 0),
-    #                             ('location_id','=',p.location_id.id)
-    #                         ]                
-    #             if not move_line:
-    #                 domain = [
-    #                             ("product_id", "=", m.product_id.id),
-    #                             ("quantity", ">", 0),
-    #                             ('location_id','=',p.location_id.id)
-    #                         ]
-    #                 lote=self.env['stock.quant'].search(domain,order="in_date",limit=1)                       
-    #                 vals={
-    #                         'picking_id':p.id,
-    #                         'move_id':m.id,
-    #                         'product_id':m.product_id.id,
-    #                         'product_uom_id':m.product_uom.id,
-    #                         #'product_uom_qty':m.product_uom_qty,
-    #                         #'product_qty':m.product_uom_qty,
-    #                         'qty_done':m.product_uom_qty,
-    #                         'location_id':m.location_id.id,
-    #                         'location_dest_id':m.location_dest_id.id,
-    #                         'lot_id':lote.lot_id.id,
-    #                     }
-    #                 move_line.sudo().create(vals)
-    #                 move_line=self.env['stock.move.line'].search([('move_id','=',m.id)])                    
-    #             else:
-    #                 lote=self.env['stock.quant'].search(domain,order="in_date",limit=1)                       
-    #                 vals={
-    #                     'qty_done':m.product_uom_qty,
-    #                     'lot_id':lote.lot_id.id
-    #                 }
-    #                 move_line.sudo().write(vals)
-    #         p.button_validate()
-
-    
 
 class Clientes(models.Model):
     _inherit = 'res.partner'
@@ -135,6 +115,8 @@ class Clientes(models.Model):
                                                                   ('sabado', 'Sabado'),
                                                                   ('domingo', 'Domingo'),])
     saldo_menbresia = fields.Integer(compute='_compute_saldo_menbresia', string='Saldo Pendiente')
+    membresias_vencidas = fields.Integer(compute='_compute_saldo_menbresia', string='Membresias Vencidas')
+    membresias_por_vencidas = fields.Integer(compute='_compute_saldo_menbresia', string='Membresias por Vencidas')
     facturas_ids = fields.One2many(comodel_name='account.invoice', inverse_name='partner_id', string='Menbresias Beneficiarios')
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id', string='Retiros')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")

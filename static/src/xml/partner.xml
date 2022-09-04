@@ -21,7 +21,7 @@
 			</td>
 			<td>
 				<t t-if="partner.saldo_menbresia">
-					<t t-esc='partner.saldo_menbresia' />
+					<span>Membresias Pendientes</span>
 				</t>
 
 			</td>
