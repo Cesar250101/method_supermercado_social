@@ -18,10 +18,10 @@ class Pagos(models.Model):
 
     @api.model
     def calzar_pagos(self):
-        pagos_sin_calzar=self.env['account.payment'].search([('invoice_ids','=',False)],limit=3)
+        pagos_sin_calzar=self.env['account.payment'].search([('invoice_ids','=',False)])
         for p in pagos_sin_calzar:
             domain=[('state','=','open'),('partner_id','=',p.partner_id.id)]
-            facturas_abiertas=self.env['account.invoice'].search(domain,order="date_due",limit=3)
+            facturas_abiertas=self.env['account.invoice'].search(domain,order="date_due")
             if facturas_abiertas:
                 for f in facturas_abiertas:
                     p.invoice_ids = [(4, f.id)]
