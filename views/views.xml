@@ -32,7 +32,7 @@
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
         <xpath expr="//field[@name='vat']" position="after">
-          <field name="motivo_desactivacion" attrs="{'invisible':[('active', '!=', False)],'required':[('active', '=', False)]}"/>
+          <!-- <field name="motivo_desactivacion" attrs="{'invisible':[('active', '!=', False)],'required':[('active', '=', False)]}"/> -->
         </xpath> 
         <xpath expr="//page[@name='sales_purchases']" position="after">
           <page name="beneficiario" string="Datos Beneficiario">
@@ -65,7 +65,7 @@
                 <field name="dia_retiro"/>
                 <field name="saldo_menbresia"/>
                 <field name="ultimo_retiro"/>
-                <field name="motivo_desactivacion" attrs="{'invisible':[('motivo_desactivacion', '=', False)]}"/>
+                <!-- <field name="motivo_desactivacion" attrs="{'invisible':[('motivo_desactivacion', '=', False)]}"/> -->
                 
         </tree>
       </field>

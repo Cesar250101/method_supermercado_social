@@ -120,7 +120,7 @@ class Clientes(models.Model):
     facturas_ids = fields.One2many(comodel_name='account.invoice', inverse_name='partner_id', string='Menbresias Beneficiarios')
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id', string='Retiros')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',compute="_compute_ultimo_retiro")
-    motivo_desactivacion = fields.Char('Motivo Desactivación')
+    #motivo_desactivacion = fields.Char('Motivo Desactivación')
 
     @api.one
     @api.depends('facturas_ids','facturas_ids.state')
