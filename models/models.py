@@ -158,7 +158,7 @@ class Registro(models.Model):
     buscar_rut = fields.Boolean(string='Buscar por RUT')
     rut = fields.Char(string='Rut Beneficiario')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
-    motivo_desactivacion = fields.Char('Motivo Desactivación',related='partner_id.motivo_desactivacion')
+    #motivo_desactivacion = fields.Char('Motivo Desactivación',related='partner_id.motivo_desactivacion')
     dif_nro_semana = fields.Integer(string='N° Semana')
 
 
