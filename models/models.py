@@ -217,6 +217,7 @@ class Registro(models.Model):
             saldo_vencido=self.env['account.invoice'].search(domain)
             saldo=0
             saldo_por_vencer=0
+            msg=""
             if saldo_vencido:
                 for s in saldo_vencido:
                     if s.date_due<=date.today():
