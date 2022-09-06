@@ -21,22 +21,21 @@ class Pagos(models.Model):
         pagos_sin_calzar=self.env['account.payment'].search([('invoice_ids','=',False)])
         for p in pagos_sin_calzar:
             domain=[('state','=','open'),('partner_id','=',p.partner_id.id)]
-            facturas_abiertas=self.env['account.invoice'].search(domain,order="date_due")
+            facturas_abiertas=self.env['account.invoice'].search(domain,order="date_due",limit=1)
             if facturas_abiertas:
-                for f in facturas_abiertas:
-                    p.invoice_ids = [(4, f.id)]
-                    f.payment_ids=[(4, p.id)] 
-                    f.write({'state':'paid'})
+                p.invoice_ids = [(4, facturas_abiertas.id)]
+                facturas_abiertas.payment_ids=[(4, p.id)] 
+                facturas_abiertas.write({'state':'paid'})
                     # arma la sentencia SQL
-                    qry = """UPDATE account_invoice SET state = 'paid',
+                qry = """UPDATE account_invoice SET state = 'paid',
                                 reconciled=true,
                                 residual=0 ,
                                 residual_signed=0 ,
                                 residual_company_signed=0 
                                 WHERE id ={}"""
 
-                    qry=qry.format(f.id)
-                    f.env.cr.execute(qry)                            
+                qry=qry.format(facturas_abiertas.id)
+                facturas_abiertas.env.cr.execute(qry)                            
 
 
 class ModuleName(models.Model):
