@@ -70,6 +70,13 @@ class ModuleName(models.Model):
     _inherit = 'stock.picking'
 
 
+    @api.model
+    def eliminar_reservas(self):
+        query = "delete from stock_move_line sml where state ='assigned'"
+        self.env.cr.execute(query)
+
+
+
     @api.one
     def valida_entrega_uno(self):
         move=self.env['stock.move'].search([('picking_id','=',self.id)])
