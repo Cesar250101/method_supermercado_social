@@ -14,8 +14,8 @@ class Payment_wizard(models.TransientModel):
     # option = fields.Selection([('create', 'Create'), ('skip', 'Skip ')], string='Operation')
     # state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted')], string='State')
     # payment_type = fields.Selection([('customer_py', 'Customer Payment'), ('supp_py', 'Supplier Payment')],string='Payment')
-    data_file = fields.Binary(string="File")
-    journal_id = fields.Many2one('account.journal', string='field_name',domain = "[('type','in',('cash','bank'))]")
+    data_file = fields.Binary(string="Archivo")
+    journal_id = fields.Many2one('account.journal', string='Diario Pago',domain = "[('type','in',('cash','bank'))]")
 
     @api.multi
     def Import_payment(self):        
