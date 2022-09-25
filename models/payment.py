@@ -49,7 +49,7 @@ class Payment_wizard(models.TransientModel):
                     raise ValidationError("Beneficiario con rut %s no existe!" % rut)                
 
             try:
-                date=datetime.strptime(fecha, '%d%m%Y').strftime('%d/%m/%y')
+                date=datetime.strptime(fecha, '%d%m%YYYY').strftime('%d/%m/%y')
             except:
                 raise exceptions.Warning(_('Date format must be dd-mm-yyyy.'))
 
