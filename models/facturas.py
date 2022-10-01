@@ -17,6 +17,7 @@ class Payment_wizard(models.TransientModel):
     data_file = fields.Binary(string="Archivo")
     journal_id = fields.Many2one('account.journal', string='Diario de Facturas',domain = "[('type','=','sale')]")
     product_id = fields.Many2one('product.product', string='Producto')
+    validar_factura = fields.Boolean('Validar Facturas?')
 
     @api.multi
     def Import_invoice(self):        
@@ -91,4 +92,5 @@ class Payment_wizard(models.TransientModel):
                     'user_id':usuario
                     }            
             invoice_id = self.env['account.invoice'].create(values)
-            invoice_id.action_invoice_open()
+            if self.validar_factura:
+                invoice_id.action_invoice_open()
