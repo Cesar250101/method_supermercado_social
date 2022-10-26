@@ -66,7 +66,7 @@ class Payment_wizard(models.TransientModel):
                 date_emision=datetime.strptime(fecha_emision, '%d-%m-%Y').strftime('%Y-%m-%d')
                 date_vcto=datetime.strptime(fecha_vcto, '%d-%m-%Y').strftime('%Y-%m-%d')
             except:
-                raise exceptions.Warning(_('Date format must be dd-mm-yyyy.'))
+                raise exceptions.Warning(_('Date format must be ddMMyyyy.'))
 
             invoice_line=[]
             invoice_line.append(
