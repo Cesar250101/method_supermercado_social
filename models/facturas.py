@@ -108,15 +108,20 @@ class Payment_wizard(models.TransientModel):
                 raise exceptions.Warning(_('Please select proper file type.'))
             for row in file_data:
                 fecha=row[1]
+                fecha_emision=str(row[1])
+                dia=fecha_emision[0:2]
+                mes=fecha_emision[2:4]
+                año=fecha_emision[4:8]     
+                fecha_emision=dia+"-"+mes+"-"+año                
                 nro_factura=row[0]
                 factura=self.env['account.invoice'].search([('number','=',nro_factura)],limit=1)
                 if factura:
                     nota_credito = factura.copy(default={'type': 'out_refund',
                     'refund_invoice_id':factura.id,
                     'state':'draft',
-                    'date_invoice':fecha,
-                    'date_due':fecha,
-                    'date':fecha,
+                    'date_invoice':fecha_emision,
+                    'date_due':fecha_emision,
+                    'date':fecha_emision,
                     'amount_untaxed_signed':(factura.amount_untaxed_signed)*-1,
                     'amount_total_signed':(factura.amount_total_signed)*-1,
                     'amount_total_company_signed':(factura.amount_total_company_signed)*-1,
