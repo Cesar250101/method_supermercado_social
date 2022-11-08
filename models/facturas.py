@@ -110,9 +110,9 @@ class Payment_wizard(models.TransientModel):
                 fecha=row[1]
                 fecha_emision=str(row[1])
                 dia=fecha_emision[0:2]
-                mes=fecha_emision[2:4]
-                año=fecha_emision[4:8]     
-                fecha_emision=dia+"-"+mes+"-"+año                
+                mes=fecha_emision[3:5]
+                año=fecha_emision[6:10]     
+                fecha_emision=año+"-"+mes+"-"+dia                
                 nro_factura=row[0]
                 factura=self.env['account.invoice'].search([('number','=',nro_factura)],limit=1)
                 if factura:
