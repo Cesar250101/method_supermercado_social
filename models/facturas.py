@@ -35,7 +35,6 @@ class Payment_wizard(models.TransientModel):
 
             Partner = self.env['res.partner']
             Journal = self.env['account.journal']
-
             contexto=self.env.context
             usuario=contexto['uid']
 
@@ -97,6 +96,7 @@ class Payment_wizard(models.TransientModel):
                 if self.validar_factura:
                     invoice_id.action_invoice_open()
         else:
+            new_factura=self.env['account.invoice']
             try:
                 file_datas = base64.decodestring(self.data_file)
                 workbook = xlrd.open_workbook(file_contents=file_datas)
@@ -116,16 +116,44 @@ class Payment_wizard(models.TransientModel):
                 nro_factura=row[0]
                 factura=self.env['account.invoice'].search([('number','=',nro_factura)],limit=1)
                 if factura:
-                    nota_credito = factura.copy(default={'type': 'out_refund',
-                    'refund_invoice_id':factura.id,
-                    'state':'draft',
-                    'date_invoice':fecha_emision,
-                    'date_due':fecha_emision,
-                    'date':fecha_emision,
-                    'amount_untaxed_signed':(factura.amount_untaxed_signed)*-1,
-                    'amount_total_signed':(factura.amount_total_signed)*-1,
-                    'amount_total_company_signed':(factura.amount_total_company_signed)*-1,
-                    })
+                    factura_line=[]  
+                    for i in factura.invoice_line_ids:
+                        factura_line.append(
+                                            (0, 0, {
+                                            "product_id": i.product_id.id,
+                                            "product_uom_qty":i.quantity,
+                                            "price_unit": i.price_unit,
+                                            "discount":i.discount,
+                                            "product_uom":i.product_id.product_tmpl_id.uom_id.id,
+                                            "name":i.product_id.product_tmpl_id.name,   
+                                            "account_id":i.product_id.product_tmpl_id.categ_id.property_account_expense_categ_id.id
+                                            }))                                       
+                    vals={
+                        'type': 'out_refund',
+                        'refund_invoice_id':factura.id,
+                        'state':'draft',
+                        'partner_id':factura.partner_id.id,
+                        'company_id':factura.company_id.id,
+                        'date_invoice':fecha_emision,
+                        'date_due':fecha_emision,
+                        'date':fecha_emision,
+                        'amount_untaxed_signed':(factura.amount_untaxed_signed)*-1,
+                        'amount_total_signed':(factura.amount_total_signed)*-1,
+                        'amount_total_company_signed':(factura.amount_total_company_signed)*-1,
+                        'invoice_line_ids':factura_line
+                    }
+                    nota_credito=new_factura.create(vals)
+                    # nota_credito = factura.copy(default={'type': 'out_refund',
+                    # 'refund_invoice_id':factura.id,
+                    # 'state':'draft',
+                    # 'company_id':factura.company_id.id,
+                    # 'date_invoice':fecha_emision,
+                    # 'date_due':fecha_emision,
+                    # 'date':fecha_emision,
+                    # 'amount_untaxed_signed':(factura.amount_untaxed_signed)*-1,
+                    # 'amount_total_signed':(factura.amount_total_signed)*-1,
+                    # 'amount_total_company_signed':(factura.amount_total_company_signed)*-1,
+                    # })
                     conciliar=self.conciliar_nc(mode='cancel',factura_id=factura,nota_credito=nota_credito)
                     print(conciliar)
 
