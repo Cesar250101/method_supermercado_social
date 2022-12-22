@@ -16,6 +16,8 @@ class Pagos(models.Model):
     _inherit = 'account.payment'
     _description = 'Pagos de Facturas'
 
+    fecha_vcto = fields.Date('Fecha Vcto.')
+
     @api.model
     def calzar_pagos(self):
         pagos_sin_calzar=self.env['account.payment'].search([('invoice_ids','=',False)])
