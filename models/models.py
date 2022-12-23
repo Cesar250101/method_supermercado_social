@@ -167,7 +167,7 @@ class Registro(models.Model):
     rut = fields.Char(string='Rut Beneficiario')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro',related="partner_id.ultimo_retiro")
     #motivo_desactivacion = fields.Char('Motivo Desactivación',related='partner_id.motivo_desactivacion')
-    dif_nro_semana = fields.Integer(string='N° Semana')
+    dif_nro_semana = fields.Integer(string='N° Semana Último Retiro')
 
 
     @api.onchange('partner_id')

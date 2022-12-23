@@ -65,17 +65,19 @@ class Payment_wizard(models.TransientModel):
                 'state': 'draft',
                 'payment_type': 'inbound',
                 }
-            payment_id = self.env['account.payment'].create(payment_vals)
-            payment_id.post()
-
-#Calzar el pago con la factura por la fecha de vcto
+#Busca la factura por fecha de vcto y si no existe no crea el pago                
             domain=[
                     ('state','=','open'),
                     ('partner_id','=',partner_id),
                     ('date_due','=',date)
                     ]
             facturas_abiertas=self.env['account.invoice'].search(domain,order="date_due",limit=1)
+
             if facturas_abiertas:
+                payment_id = self.env['account.payment'].create(payment_vals)
+                payment_id.post()
+
+
                 payment_id.invoice_ids = [(4, facturas_abiertas.id)]
                 facturas_abiertas.payment_ids=[(4, payment_id.id)] 
                 facturas_abiertas.write({'state':'paid'})
