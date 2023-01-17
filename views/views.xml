@@ -1,101 +1,92 @@
 <odoo>
-  <data>
+    <data>
 
-  <!-- Desachos de inventario tree -->
-  <record id="method_supermercado_social.stock_scrap_tree_view" model="ir.ui.view">
-    <field name="name">method.supermercado.social.stock.scrap.tree.view</field>
-    <field name="model">stock.scrap</field>
-    <field name="inherit_id" ref="stock.stock_scrap_tree_view"/>
-    <field name="arch" type="xml">
-      <xpath expr="//field[@name='name']" position="after">
-        <field name="motivo_merma" />
-      </xpath>           
-    </field>
-  </record>
 
-<!-- Desachos de inventario form-->
-<record id="method_supermercado_social.stock_scrap_form_view" model="ir.ui.view">
-  <field name="name">method.supermercado.social.stock.scrap.form.view</field>
-  <field name="model">stock.scrap</field>
-  <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
-  <field name="arch" type="xml">
-    <xpath expr="//div[hasclass('o_row')]" position="after">
-      <field name="motivo_merma" />
-    </xpath>     
-  </field>
-</record>
+        <!-- model.name inherit form view -->
+        <record id="method_supermercado_social.view_partner_form" model="ir.ui.view">
+            <field name="name">method.supermercado.social.view.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <!-- <field name="motivo_desactivacion" attrs="{'invisible':[('active', '!=', False)],'required':[('active', '=', False)]}"/> -->
+                </xpath>
+                <xpath expr="//page[@name='sales_purchases']" position="after">
+                    <page name="beneficiario" string="Datos Beneficiario">
+                        <group>
+                            <group name="beneficiario_grupo" string="Beneficiario">
+                                <field name="grupo_familiar"/>
+                                <field name="hora_retiro"/>
+                                <field name="dia_retiro" widget="radio"/>
+                                <field name="saldo_menbresia" widget="widget=’monetary"/>
+                                <field name="codigo_qr"/>
+                                <field name="asistencia_ids"/>
+                                <field name="ultimo_retiro"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
 
-    <!-- model.name inherit form view -->
-    <record id="method_supermercado_social.view_partner_form" model="ir.ui.view">
-      <field name="name">method.supermercado.social.view.partner.form</field>
-      <field name="model">res.partner</field>
-      <field name="inherit_id" ref="base.view_partner_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//field[@name='vat']" position="after">
-          <!-- <field name="motivo_desactivacion" attrs="{'invisible':[('active', '!=', False)],'required':[('active', '=', False)]}"/> -->
-        </xpath> 
-        <xpath expr="//page[@name='sales_purchases']" position="after">
-          <page name="beneficiario" string="Datos Beneficiario">
-              <group>
-                <group name="beneficiario_grupo" string="Beneficiario">
-                  <field name="grupo_familiar"/>   
-                  <field name="hora_retiro"/>   
-                  <field name="dia_retiro" widget="radio"/>   
-                  <field name="saldo_menbresia" widget="widget=’monetary"/>   
-                  <field name="codigo_qr"/>   
-                  <field name="asistencia_ids"/>   
-                  <field name="ultimo_retiro"/>  
-                </group>
-              </group>
-          </page>
-        </xpath>        
-      </field>
-    </record>
+        <!-- model.name tree view -->
+        <record id="method_supermercado_social_view_tree" model="ir.ui.view">
+            <field name="name">method.supermercado.social.view.tree</field>
+            <field name="model">method_supermercado_social.asistencia</field>
+            <field name="arch" type="xml">
+                <tree string="Registro de Asistencia" decoration-info="state == 'no_autorizado'" decoration-muted="state in ('no_autorizado')" create="1">
+                    <field name="create_date" />
+                    <field name="partner_id"/>
+                    <field name="grupo_familiar"/>
+                    <field name="hora_retiro"/>
+                    <field name="dia_retiro"/>
+                    <field name="saldo_menbresia"/>
+                    <field name="ultimo_retiro"/>
+                    <field name="state"/>
+                    <!-- <field name="motivo_desactivacion" attrs="{'invisible':[('motivo_desactivacion', '=', False)]}"/> -->
 
-    <!-- model.name tree view -->
-    <record id="method_supermercado_social_view_tree" model="ir.ui.view">
-      <field name="name">method.supermercado.social.view.tree</field>
-      <field name="model">method_supermercado_social.asistencia</field>
-      <field name="arch" type="xml">
-        <tree>
-                <field name="create_date" />
-                <field name="partner_id"/>
-                <field name="grupo_familiar"/>
-                <field name="hora_retiro"/>
-                <field name="dia_retiro"/>
-                <field name="saldo_menbresia"/>
-                <field name="ultimo_retiro"/>
-                <!-- <field name="motivo_desactivacion" attrs="{'invisible':[('motivo_desactivacion', '=', False)]}"/> -->
-                
-        </tree>
-      </field>
-    </record>
+                </tree>
+            </field>
+        </record>
 
-    <!-- model.name form view -->
-    <record id="method_supermercado_social_view_form" model="ir.ui.view">
-      <field name="name">method.supermercado.social.view.form</field>
-      <field name="model">method_supermercado_social.asistencia</field>
-      <field name="arch" type="xml">
-        <form string="Registro de Beneficiarios">
-          <sheet>
-            <group string="Datos Beneficiario">
-              <group>
-                <field name="buscar_rut"  widget='checkbox'/>   
-                <field name="codigo_qr" attrs="{'invisible':[('buscar_rut', '=', True)]}"/>
-                <field name="rut" attrs="{'invisible':[('buscar_rut', '=', False)]}"/>
-                <field name="partner_id" required="1" default=""/>
-                <field name="grupo_familiar"/>
-                <field name="hora_retiro"/>
-                <field name="dia_retiro"/>
-                <field name="saldo_menbresia"/>
-                <field name="ultimo_retiro"/>
-                <field name="dif_nro_semana"/>
-              </group>  
-            </group>
-          </sheet>
-        </form>
-      </field>
-    </record>
+        <!-- model.name form view -->
+        <record id="method_supermercado_social.asistencia_view_form" model="ir.ui.view">
+            <field name="name">method.supermercado.social.view.form</field>
+            <field name="model">method_supermercado_social.asistencia</field>
+            <field name="arch" type="xml">
+                <form string="Registro de Beneficiarios">
+                    <header>
+                        <button icon="fa-arrow-right"
+                                string="Autorizar"
+                                type="object"
+                                class="oe_highlight"
+                                name="autorizar_2_retiro"
+                                groups="point_of_sale.group_pos_manager"
+                                attrs="{'invisible':[('state', '=', 'autorizado')]}"                                                        
+                        />                                
+                        <field name='state' widget="statusbar" />                                
+                    </header>
+                    <sheet>
+                        <group string="Datos Beneficiario">
+                            <group>
+                                <field name="show_warning" invisible="1"/>
+                                <field name="buscar_rut"  widget='checkbox'/>
+                                <field name="codigo_qr" attrs="{'invisible':[('buscar_rut', '=', True)]}"/>
+                                <field name="rut" attrs="{'invisible':[('buscar_rut', '=', False)]}"/>
+                                <field name="partner_id" required="1" default=""/>
+
+                                <field name="grupo_familiar"/>
+                                <field name="hora_retiro"/>
+                                <field name="dia_retiro"/>
+                                <field name="saldo_menbresia"/>
+                                <field name="ultimo_retiro"/>
+                                <field name="dif_nro_semana"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <record id="method_supermercado_social_act" model="ir.actions.act_window">
             <field name="name">Registro de Beneficiarios</field>
@@ -115,5 +106,5 @@
 
 
 
-  </data>
+    </data>
 </odoo>

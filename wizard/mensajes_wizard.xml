@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="method_supermercado_social.segundo_retiro_form_view" model="ir.ui.view">
+        <field name="name">method.supermercado.social.segundo.retiro.form.view</field>
+        <field name="model">method_supermercado_social.segundo_retiro</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Select Products">
+                <group>
+                    <group>
+                        <field name="asistencia_id" invisible="1"/>
+                        <span>ingrese su PIN para validar la acción</span>
+                        <field name="pin" required="1" password="True"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Validar" type="object" name="action_validate" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_supermercado_social_segundo_retiro" model="ir.actions.act_window">
+        <field name="name">Segundo Retiro</field>
+        <field name="res_model">method_supermercado_social.segundo_retiro</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="method_supermercado_social.segundo_retiro_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
