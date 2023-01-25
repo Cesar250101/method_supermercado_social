@@ -1,5 +1,28 @@
 <odoo>
     <data>
+        <!-- Desechos form-->
+        <record id="method_supermercado_social.stock_scrap_form_view" model="ir.ui.view">
+            <field name="name">method.supermercado.social.stock.scrap.form.view</field>
+            <field name="model">stock.scrap</field>
+            <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[2]" position="inside">
+                    <field name="motivo_merma"/>
+                </xpath>
+            </field>
+        </record>
+	
+        <!-- Desechos form-->
+        <record id="method_supermercado_social.stock_scrap_tree_view" model="ir.ui.view">
+            <field name="name">method.supermercado.social.stock.scrap.tree.view</field>
+            <field name="model">stock.scrap</field>
+            <field name="inherit_id" ref="stock.stock_scrap_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="motivo_merma"/>
+                </xpath>
+            </field>
+        </record>
 
 
         <!-- model.name inherit form view -->

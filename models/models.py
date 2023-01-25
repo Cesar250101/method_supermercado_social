@@ -43,17 +43,15 @@ class Pagos(models.Model):
                 qry = qry.format(facturas_abiertas.id)
                 facturas_abiertas.env.cr.execute(qry)
 
-            # class ModuleName(models.Model):
+class ModuleName(models.Model):
+    _inherit = 'stock.scrap'
 
-
-#     _inherit = 'stock.scrap'
-
-#     motivo_merma = fields.Selection(string='Motivo Merma', selection=[('diferencia', 'Diferencia de inventario'), 
-#                                                                     ('vencido', 'Producto venció en bodega'),
-#                                                                     ('daño', 'Producto dañado'),
-#                                                                     ('ingreso', 'Error de ingreso'),
-#                                                                     ('sala', 'Merma en sala')],
-#                                                             required=True)
+    motivo_merma = fields.Selection(string='Motivo Merma', selection=[('diferencia', 'Diferencia de inventario'), 
+                                                                    ('vencido', 'Producto venció en bodega'),
+                                                                    ('daño', 'Producto dañado'),
+                                                                    ('ingreso', 'Error de ingreso'),
+                                                                    ('sala', 'Merma en sala')],
+                                                            required=True)
 
 
 class OdenesPos(models.Model):
@@ -311,7 +309,4 @@ class Registro(models.Model):
                     'Código QR o RUT no asociado al cliente, seleccione al beneficiario de forma manual y grabe el registro')
 
 
-class Desecho(models.Model):
-    _inherit = 'stock.scrap'
 
-    motivo_desecho = fields.Text('Observación ')
