@@ -43,7 +43,7 @@ class Pagos(models.Model):
                 qry = qry.format(facturas_abiertas.id)
                 facturas_abiertas.env.cr.execute(qry)
 
-class ModuleName(models.Model):
+class StockScrap(models.Model):
     _inherit = 'stock.scrap'
 
     motivo_merma = fields.Selection(string='Motivo Merma', selection=[('diferencia', 'Diferencia de inventario'), 
