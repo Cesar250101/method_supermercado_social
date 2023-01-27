@@ -46,12 +46,20 @@ class Pagos(models.Model):
 class StockScrap(models.Model):
     _inherit = 'stock.scrap'
 
-    motivo_merma = fields.Selection(string='Motivo Merma', selection=[('diferencia', 'Diferencia de inventario'), 
-                                                                    ('vencido', 'Producto venció en bodega'),
-                                                                    ('daño', 'Producto dañado'),
-                                                                    ('ingreso', 'Error de ingreso'),
-                                                                    ('sala', 'Merma en sala')],
-                                                            required=True)
+    # motivo_merma = fields.Selection(string='Motivo Merma', selection=[('diferencia', 'Diferencia de inventario'), 
+    #                                                                 ('vencido', 'Producto venció en bodega'),
+    #                                                                 ('daño', 'Producto dañado'),
+    #                                                                 ('ingreso', 'Error de ingreso'),
+    #                                                                 ('sala', 'Merma en sala')],
+    #                                                         required=True)
+    motivo_merma_id = fields.Many2one(comodel_name='method_supermercado_social.motivo_merma', string='Motivo Merma',required=True)
+
+class MotivoMerma(models.Model):
+    _name = 'method_supermercado_social.motivo_merma'
+    _description = 'Motivos de merma para poder clasificar los desechos'
+    
+    name = fields.Char(string='Nombre')
+    active = fields.Boolean(string='Activo',default=True)
 
 
 class OdenesPos(models.Model):

@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[2]" position="inside">
-                    <field name="motivo_merma"/>
+                    <field name="motivo_merma_id" options="{'no_create': True}"/>
                 </xpath>
             </field>
         </record>
@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="stock.stock_scrap_tree_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="after">
-                    <field name="motivo_merma"/>
+                    <field name="motivo_merma_id"/>
                 </xpath>
             </field>
         </record>
@@ -124,6 +124,54 @@
                 </p>
             </field>
         </record>
+
+        <record id="method_supermercado_social.motivo_merma_view_tree" model="ir.ui.view">
+            <field name="name">model_name.view.tree</field>
+            <field name="model">method_supermercado_social.motivo_merma</field>
+            <field name="arch" type="xml">
+                <tree string="Lista motivos de merma">
+                    <field name="name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>    
+
+        <record id="method_supermercado_social.motivo_merma_view_form" model="ir.ui.view">
+            <field name="name">Formulario motivos de merma</field>
+            <field name="model">method_supermercado_social.motivo_merma</field>
+            <field name="arch" type="xml">
+                <form string="Motivos de mermas">
+                    <sheet>
+                        <group>
+                            <group>
+                    <field name="name"/>
+                    <field name="active"/>                            
+
+                             </group>
+                            
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="method_supermercado_social_motivo_merma_act" model="ir.actions.act_window">
+            <field name="name">Motivos de Mermas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">method_supermercado_social.motivo_merma</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Registro.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="method_supermercado_social_motivo_merca" name="Motivos de Mermas" parent="stock.menu_stock_inventory_control" action="method_supermercado_social_motivo_merma_act" sequence="1"/>
+
         <menuitem id="method_supermercado_social_asistencia_sub_menu" name="Registro de Beneficiarios" parent="point_of_sale.menu_point_root" sequence="1" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
         <menuitem id="method_supermercado_social_asistencia" name="Registro de Beneficiarios" parent="method_supermercado_social_asistencia_sub_menu" action="method_supermercado_social_act" sequence="1" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
 
