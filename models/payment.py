@@ -1,10 +1,10 @@
 from odoo import api, exceptions, fields, models, _
 import base64
-from odoo.exceptions import ValidationError
 import xlrd
 import io
 from odoo.tools import pycompat
 from datetime import datetime
+from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
 
 
 class Payment_wizard(models.TransientModel):
@@ -36,8 +36,10 @@ class Payment_wizard(models.TransientModel):
             if not (row[0] or row[2] or row[3]):
                 raise exceptions.Warning(_('Partner,Journal,Date values are required.'))
             rut=str(row[0]).replace('.0','')
-            monto=str(row[1]).replace('.0','')
-            fecha=str(row[4]).replace('.0','')
+            numero_documento=str(row[1]).replace('.0','')
+            monto=str(row[5]).replace('.0','')
+            fecha=str(row[3]).replace('.0','')
+            
             partner_id = Partner.search([('vat', '=ilike', rut)],limit=1)            
             if partner_id:
                 partner_id=partner_id.id
@@ -49,18 +51,18 @@ class Payment_wizard(models.TransientModel):
                     raise ValidationError("Beneficiario con rut %s no existe!" % rut)                
 
             try:
-                #date=datetime.strptime(fecha, '%d%m%Y').strftime('%d-%m-%y')
-                date=datetime.strptime(fecha, '%d-%m-%Y').strftime('%Y-%m-%d')
+                fecha=datetime.strptime(fecha,"%d%m%Y")
+                fecha=fecha.strftime("%d-%m-%Y")
             except:
-                raise exceptions.Warning(_('Date format must be dd-mm-yyyy.'))
+                raise exceptions.Warning(_('El formato de fecha debe ser ddmmyyyy.'))
 
             payment_vals = {
                 'partner_type':'customer',
                 'partner_id': partner_id,
-                'payment_date': date,
+                'payment_date': fecha,
                 'journal_id':self.journal_id.id,
                 'amount': monto,
-                'communication': row[2],
+                'communication': row[10],
                 'payment_method_id': 1,
                 'state': 'draft',
                 'payment_type': 'inbound',
@@ -69,7 +71,7 @@ class Payment_wizard(models.TransientModel):
             domain=[
                     ('state','=','open'),
                     ('partner_id','=',partner_id),
-                    ('date_due','=',date)
+                    ('number','=',numero_documento)
                     ]
             facturas_abiertas=self.env['account.invoice'].search(domain,order="date_due",limit=1)
 
@@ -91,4 +93,15 @@ class Payment_wizard(models.TransientModel):
 
                 qry=qry.format(facturas_abiertas.id)
                 facturas_abiertas.env.cr.execute(qry)                            
+            else:
+                payment_id = self.env['account.payment'].create(payment_vals)                
+        #Final del archivo envia mensaje al usuario indicando el status de los pagos
+        warning = {
+                    'title': 'Importación de pagos finalizada',
+                    'message': """Los pagos fueron importados exitosamente. Los pagos a los cuales no
+                                        se encontro la factura o si la factura existe pero esta pagada, estos
+                                        pagos queron en estado borrador
+                                    """,
 
+                }
+        return {'warning': warning}

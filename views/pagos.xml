@@ -6,13 +6,21 @@
             <field name="model">payment.wizard</field>
             <field name="arch" type="xml">
                 <form string="Import Payment">
-                    <group>
                         <group>
-                            <field name="data_file" filename="name" required="1"/>
-                            <field name="journal_id" required="1"/>
-                            
+                            <group>
+                                <field name="data_file" filename="name" required="1"/>
+                                <field name="journal_id" required="1"/>
+                            </group>
                         </group>
-                    </group>
+                        <group>
+                            <group name="mansaje" string="Información">
+                                <p align="justify">
+                                    Los pagos a los cuales no se les encontre una factura o si la factura existe 
+                                    pero esta pagada, estos pagos quedarán en estado borrador
+                                </p>
+                                
+                            </group>
+                        </group>
                     <footer>
                         <button name="Import_payment" string="Import" type="object"  class="oe_highlight" />
                         or
