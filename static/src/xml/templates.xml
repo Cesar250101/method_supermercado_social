@@ -10,6 +10,10 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/method_supermercado_social/static/src/js/pos_campos.js"/>
         </xpath>
+        <!-- <xpath expr="." position="inside">
+            <script type="text/javascript" src="/method_supermercado_social/static/src/js/pos_cliente_validation.js"></script>
+        </xpath> -->
+
         <xpath expr="//link[@id='pos-stylesheet']" position="after">
             <link rel="stylesheet" href="/method_supermercado_social/static/src/css/pos_access_right.css" />
         </xpath>

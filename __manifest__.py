@@ -36,6 +36,7 @@
         'security/ir.model.access.csv',
         'static/src/xml/templates.xml',
         # 'wizard/mensajes_wizard.xml',
+        'views/pos_template.xml',
     ],
     'qweb': [
         'static/src/xml/partner.xml',

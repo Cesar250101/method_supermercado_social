@@ -45,6 +45,8 @@
                                 <field name="codigo_qr"/>
                                 <field name="asistencia_ids"/>
                                 <field name="ultimo_retiro"/>
+                                <field name="state_2_retiro"/>
+                                
                             </group>
                         </group>
                     </page>

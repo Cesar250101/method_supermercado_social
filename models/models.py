@@ -136,7 +136,16 @@ class Clientes(models.Model):
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id',
                                      string='Retiros')
     ultimo_retiro = fields.Datetime(string='Ultimo Retiro', compute="_compute_ultimo_retiro")
-
+    state_2_retiro = fields.Selection(
+        [
+            ("no_autorizado", "No Autorizado"),
+            ("autorizado", "Autorizado"),
+        ],
+        string="Estado",
+        help="Indica si se autorizo el segundo retiro en la misma semana",
+        copy=False,
+        default='no_autorizado'
+    )      
     # motivo_desactivacion = fields.Char('Motivo Desactivación')
 
     @api.one
@@ -197,10 +206,11 @@ class Registro(models.Model):
         grupo_autorizacion=self.env.user.has_group('point_of_sale.group_pos_manager')         
         if grupo_autorizacion:
             self.state='autorizado'
+            self.partner_id.state_2_retiro='autorizado'
         else:
-            raise exceptions.UserError('Usuario no tiene permisos para autorizar un 2° retiro')
+            raise exceptions.UserError('Usuario no tiene permisos para autorizar un 2° retiro!')
 
-        print(self.state)
+
 
     @api.model
     def create(self, vals):

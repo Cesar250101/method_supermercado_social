@@ -7,13 +7,15 @@
 <templates id="method_supermercado_social.template_client" inherit_id="point_of_sale.template"
 	name="method.supermercado_social.template.client">
 	<t t-extend="ClientListScreenWidget">
-		<t t-jquery="table.client-list thead tr th:first-child" t-operation="before">
+		<t t-jquery="table.client-list thead tr th:first-child" t-operation="after">
 			<th style="width: 120px;">Último Retiro</th>
 			<th style="width: 120px;">Membresias Pendientes</th>
+			<th style="width: 120px;">Autorización</th>
+			
 		</t>
 	</t>
 	<t t-extend="ClientLine">
-		<t t-jquery="tr td:first-child" t-operation="before">
+		<t t-jquery="tr td:first-child" t-operation="after">
 			<td>
 				<t t-if="partner.ultimo_retiro">
 					<t t-esc='partner.ultimo_retiro' />
@@ -23,6 +25,12 @@
 				<t t-if="partner.saldo_menbresia">
 					<span>Membresias Pendientes</span>
 				</t>
+
+			</td>
+			<td>
+				<!-- <t t-if="partner.state_2_retiro"> -->
+					<t t-esc='partner.state_2_retiro' />
+				<!-- </t> -->
 
 			</td>
 
