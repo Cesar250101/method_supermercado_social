@@ -141,7 +141,7 @@ class Clientes(models.Model):
             ("no_autorizado", "No Autorizado"),
             ("autorizado", "Autorizado"),
         ],
-        string="Estado",
+        string="Autoriza Retiro?",
         help="Indica si se autorizo el segundo retiro en la misma semana",
         copy=False,
         default='no_autorizado'
