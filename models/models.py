@@ -150,14 +150,14 @@ class Clientes(models.Model):
     )      
     # motivo_desactivacion = fields.Char('Motivo Desactivación')
 
-    @api.model
-    def eliminar_autoriacion_beneficiario(self):
-        sql="""update res_partner rp
-        set state_2_retiro ='no_autorizado'
-        where coalesce(state_2_retiro,'') ='autorizado'  """
+    # @api.model
+    # def eliminar_autoriacion_beneficiario(self):
+    #     sql="""update res_partner rp
+    #     set state_2_retiro ='no_autorizado'
+    #     where coalesce(state_2_retiro,'') ='autorizado'  """
 
-        self.env.cr.execute(sql)
-        
+    #     self.env.cr.execute(sql)
+
 
 
     @api.one
