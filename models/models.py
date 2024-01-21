@@ -128,14 +128,14 @@ class Clientes(models.Model):
                                                                   ('viernes', 'Viernes'),
                                                                   ('sabado', 'Sabado'),
                                                                   ('domingo', 'Domingo'), ])
-    saldo_menbresia = fields.Integer(compute='_compute_saldo_menbresia', string='Saldo Pendiente')
+    saldo_menbresia = fields.Integer(compute='_compute_saldo_menbresia', string='Saldo Pendiente',store=True)
     membresias_vencidas = fields.Integer(compute='_compute_saldo_menbresia', string='Membresias Vencidas')
     membresias_por_vencidas = fields.Integer(compute='_compute_saldo_menbresia', string='Membresias por Vencidas')
     facturas_ids = fields.One2many(comodel_name='account.invoice', inverse_name='partner_id',
                                    string='Menbresias Beneficiarios')
     asistencia_ids = fields.One2many(comodel_name='method_supermercado_social.asistencia', inverse_name='partner_id',
                                      string='Retiros')
-    ultimo_retiro = fields.Datetime(string='Ultimo Retiro', compute="_compute_ultimo_retiro")
+    ultimo_retiro = fields.Datetime(string='Ultimo Retiro', compute="_compute_ultimo_retiro",store=True)
     state_2_retiro = fields.Selection(
         [
             ("no_autorizado", "No Autorizado"),
