@@ -4,6 +4,8 @@ from ast import Continue
 from distutils.log import info
 from re import search
 
+from aiohttp import request
+
 # import ipdb
 
 from odoo import models, fields, api, _
@@ -147,6 +149,16 @@ class Clientes(models.Model):
         default='no_autorizado'
     )      
     # motivo_desactivacion = fields.Char('Motivo Desactivación')
+
+    @api.model
+    def eliminar_autoriacion_beneficiario(self):
+        sql="""update res_partner rp
+        set state_2_retiro ='no_autorizado'
+        where coalesce(state_2_retiro,'') ='autorizado'  """
+
+        self.env.cr.execute(sql)
+        
+
 
     @api.one
     @api.depends('facturas_ids', 'facturas_ids.state')
